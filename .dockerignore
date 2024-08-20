@@ -1,4 +1,4 @@
-node_modules/
+node_modules
 npm-debug.log
 yarn-error.log
 yarn-debug.log
@@ -11,25 +11,30 @@ yarn-debug.log
 logs
 *.log
 
-dist/
-build/
+dist
+build
 
 .DS_Store
 Thumbs.db
 
-.vscode/
-.idea/
+.vscode
+.idea
 *.swp
 *.swo
 
 *.tmp
 *.temp
 
-coverage/
+coverage
 
-.cache/
+.cache
 .npm
 
-*.pid
-*.seed
-*.pid.lock
+.git
+.gitignore
+
+README.md
+CHANGELOG.md
+.dockerignore
+Dockerfile
+docker-compose.yml
