@@ -1,0 +1,40 @@
+name: Deploy CloudFormation Stack
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+                aws-region: us-east-1
+            - name: Deploy CloudFormation stack
+              run: |
+                STACK_NAME="my-ecr-stack"
+                TEMPLATE_FILE="ecr-repository.yml"
+
+                STACK_EXISTS=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].StackId" --output text 2>/dev/null || echo "NO")
+
+                if ["$STACK_EXISTS" == "NO"]; then
+                    echo "Stack does not exist. Creating stack..."
+                    aws cloudformation create-stack \
+                        --stack-name $STACK_NAME \
+                        --template-body file://$TEMPLATE_FILE \
+                        --region us-east-1
+                else
+                    echo "Stack exists. Updating stack..."
+                    aws cloudformation update-stack \
+                        --stack-name $STACK_NAME \
+                        --template-body file://$TEMPLATE_FILE \
+                        --region us-east-1
+                fi
+
+                aws cloudformation wait stack-create-complete --stack-name $STACK_NAME || aws cloudformation wait stack-update-complete --stack-name $STACK_NAME
