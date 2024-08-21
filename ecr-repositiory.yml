@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: 'CloudFormation template to create an ECR repository'
+
+Resources:
+  MyECRRepository:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: 'my-nodejs-app-repo'
+      ImageTagMutability: 'MUTABLE'
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      EncryptionConfiguration:
+        EncryptionType: 'AES256'
+
+Outputs:
+  RepositoryURI:
+    Description: 'URI of the ECR repository'
+    Value: !GetAtt MyECRRepository.RepositoryURI
